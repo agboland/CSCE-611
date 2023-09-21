@@ -94,13 +94,14 @@ module top (
 	end
 	
 	//Instantiate hexdriver
-	hexdriver driver0(.val(SW[3:0]), .HEX(HEX0[6:0]));
-	hexdriver driver1(.val(SW[7:4]), .HEX(HEX1[6:0]));
-	hexdriver driver2(.val(SW[11:8]), .HEX(HEX2[6:0]));
-	hexdriver driver3(.val(SW[15:12]), .HEX(HEX3[6:0]));
-	hexdriver driver4(.val(0), .HEX(HEX4[6:0]));
-	hexdriver driver5(.val(0), .HEX(HEX5[6:0]));
-	hexdriver driver6(.val(0), .HEX(HEX6[6:0]));
-	hexdriver driver7(.val(0), .HEX(HEX7[6:0]));
+	hexdriver driver0(.val(SW[3:0]), 	.HEX(HEX0[6:0]));
+	hexdriver driver1(.val(SW[7:4]), 	.HEX(HEX1[6:0]));
+	hexdriver driver2(.val(SW[11:8]), 	.HEX(HEX2[6:0]));
+	hexdriver driver3(.val(SW[15:12]),	.HEX(HEX3[6:0]));
+	hexdriver driver4(.val(0), 		.HEX(HEX4[6:0]));
+	hexdriver driver5(.val(0), 		.HEX(HEX5[6:0]));
+	hexdriver driver6(.val(0),		.HEX(HEX6[6:0]));
+	hexdriver driver7(.val(0),		.HEX(HEX7[6:0]));
 
 endmodule
+	
