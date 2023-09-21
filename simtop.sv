@@ -37,7 +37,7 @@ module simtop;
 		.HEX7(HEX7)
 	);
 
-
+//Written by Andrew Boland and Colling Bollinger 9-20-23
 	
  // Clock generation
   always #5 clk = ~clk;
