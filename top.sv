@@ -94,6 +94,7 @@ module top (
 	end
 	
 	//Instantiate hexdriver
+	//Written by Collin Bollinger and Andrew Boland
 	hexdriver driver0(.val(SW[3:0]), 	.HEX(HEX0[6:0]));
 	hexdriver driver1(.val(SW[7:4]), 	.HEX(HEX1[6:0]));
 	hexdriver driver2(.val(SW[11:8]), 	.HEX(HEX2[6:0]));
