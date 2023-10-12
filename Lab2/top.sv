@@ -46,6 +46,7 @@ module top (
 	logic [25:0] leds;
 	assign LEDR = leds[25:8];
 	assign LEDG = leds[7:0];
+	logic [3:0] bits;
 
 	/* LED state register, 0 means going left, 1 means going right */
 	logic ledstate;
@@ -62,6 +63,9 @@ module top (
 		leds = 26'b1;
 		/* start out going to the left */
 		ledstate = 1'b0;
+
+		//Set 2 MSBs to 0
+		bits[3:2] = 2'b0;
 	end
 
 	always @(posedge CLOCK_50) begin
@@ -69,6 +73,9 @@ module top (
 		* top bit will roll over and give us a clock edge for clkdiv
 		* */
 		clkdiv <= clkdiv + 1;
+
+		//Get 2 bits from switches
+		bits[1:0] = SW[17:16];
 	end
 
 	always @(posedge ledclk) begin
@@ -99,7 +106,7 @@ module top (
 	hexdriver driver1(.val(SW[7:4]), 	.HEX(HEX1[6:0]));
 	hexdriver driver2(.val(SW[11:8]), 	.HEX(HEX2[6:0]));
 	hexdriver driver3(.val(SW[15:12]),	.HEX(HEX3[6:0]));
-	hexdriver driver4(.val(0), 		.HEX(HEX4[6:0]));
+	hexdriver driver4(.val(bits[3:0]), 		.HEX(HEX4[6:0]));
 	hexdriver driver5(.val(0), 		.HEX(HEX5[6:0]));
 	hexdriver driver6(.val(0),		.HEX(HEX6[6:0]));
 	hexdriver driver7(.val(0),		.HEX(HEX7[6:0]));
