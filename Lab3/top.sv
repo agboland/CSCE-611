@@ -93,6 +93,16 @@ module top (
 		end
 	end
 	
-	CPU mycpu(.clk(CLOCK_50),.rst_n(KEY[0]));
+	wire [31:0] GPIO_out;
+	CPU mycpu(.clk(CLOCK_50),.rst_n(KEY[0]), .GPIO_in({10'h0, KEY[3:0], SW[17:0]}), .GPIO_out(GPIO_out));
+	
+	hexdriver driver0(.val(GPIO_out[3:0]), 	.HEX(HEX0[6:0]));
+	hexdriver driver1(.val(GPIO_out[7:4]), 	.HEX(HEX1[6:0]));
+	hexdriver driver2(.val(GPIO_out[11:8]), 	.HEX(HEX2[6:0]));
+	hexdriver driver3(.val(GPIO_out[15:12]), 	.HEX(HEX3[6:0]));
+	hexdriver driver4(.val(GPIO_out[19:16]), 	.HEX(HEX4[6:0]));
+	hexdriver driver5(.val(GPIO_out[23:20]), 	.HEX(HEX5[6:0]));
+	hexdriver driver6(.val(GPIO_out[27:24]), 	.HEX(HEX6[6:0]));
+	hexdriver driver7(.val(GPIO_out[31:28]), 	.HEX(HEX7[6:0]));
 
 endmodule
