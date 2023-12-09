@@ -3,8 +3,6 @@ module simtop;
 
     // Define parameters for test case configuration
     parameter NUM_TESTS = 10;
-    parameter INITIAL_PC = 32'h1000; // Initial program counter value
-    parameter TEST_TIMEOUT = 1000; // Timeout in simulation steps
 
     // Declare signals and variables
     logic clk;
@@ -12,7 +10,7 @@ module simtop;
     wire [31:0] result;
     wire [6:0] opcode_simtop;
     wire [31:0] dummy;
-    wire [6:0] dummy1;
+    wire [31:0] dummy1;
     logic [31:0] instruction;
     logic [5:0] test_count;
     logic [31:0] regfile[0:31];
@@ -25,17 +23,11 @@ module simtop;
     CPU cpu_inst (
         .clk(clk),
         .rst_n(rst),
-        .GPIO_in(instruction),
+        .GPIO_in(dummy1),
         .GPIO_out(dummy),
-        .regsel_WB_simtop(result),
-        .opcode_simtop(dummy1)
+        .regsel_WB_simtop(result)
+        //.opcode_simtop(dummy1)
     );
-
-    // Clock generation
-    always begin
-        #5 clk = ~clk;
-    end
-	 
 	 
 	 
 			//R-Type opcode
@@ -138,8 +130,9 @@ module simtop;
     // Reset generation
     initial begin
         clk = 0;
-        rst = 1;
-        #10 rst = 0;
+        rst = 0;
+        #2
+		  rst = 1;
 
         // Test cases
         test_count = 0;
@@ -165,7 +158,7 @@ module simtop;
 				
 			expected_result = rs1_val + rs2_val;
 				
-            #1;
+            #2;
 
             // Check the result
             if (result !== expected_result) begin
@@ -230,7 +223,7 @@ instruction = {FUNCT7_OR, rs2, rs1, FUNCT3_OR, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val | rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -251,7 +244,7 @@ instruction = {FUNCT7_XOR, rs2, rs1, FUNCT3_XOR, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val ^ rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -272,7 +265,7 @@ instruction = {FUNCT7_SLL, rs2, rs1, FUNCT3_SLL, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val << rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -294,7 +287,7 @@ instruction = {FUNCT7_SRA, rs2, rs1, FUNCT3_SRA, rd, OPCODE_RTYPE};
 
 expected_result = $signed(rs1_val) >>> rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -315,7 +308,7 @@ instruction = {FUNCT7_SRL, rs2, rs1, FUNCT3_SRL, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val >>> rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -336,7 +329,7 @@ instruction = {FUNCT7_SLT, rs2, rs1, FUNCT3_SLT, rd, OPCODE_RTYPE};
 
 expected_result = ($signed(rs1_val) < $signed(rs2_val)) ? 1 : 0;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -357,7 +350,7 @@ instruction = {FUNCT7_SLTU, rs2, rs1, FUNCT3_SLTU, rd, OPCODE_RTYPE};
 
 expected_result = (rs1_val < rs2_val) ? 1 : 0;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -378,7 +371,7 @@ instruction = {FUNCT7_MUL, rs2, rs1, FUNCT3_MUL, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val * rs2_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -399,7 +392,7 @@ instruction = {FUNCT7_MULH, rs2, rs1, FUNCT3_MULH, rd, OPCODE_RTYPE};
 
 expected_result = ($signed(rs1_val) * $signed(rs2_val)) >>> 32;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -420,7 +413,7 @@ instruction = {FUNCT7_MULHU, rs2, rs1, FUNCT3_MULHU, rd, OPCODE_RTYPE};
 
 expected_result = (rs1_val * rs2_val) >>> 32;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -460,7 +453,7 @@ instruction = {imm_val, rs1, FUNCT3_ADDI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val + imm_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -480,7 +473,7 @@ instruction = {imm_val, rs1, FUNCT3_ANDI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val & imm_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -500,7 +493,7 @@ instruction = {imm_val, rs1, FUNCT3_ORI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val | imm_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -520,7 +513,7 @@ instruction = {imm_val, rs1, FUNCT3_XORI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val ^ imm_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -540,7 +533,7 @@ instruction = {shamt_val, rs1, FUNCT3_SLLI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val << shamt_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -560,7 +553,7 @@ instruction = {FUNCT7_SRAI, shamt_val, rs1, FUNCT3_SRAI, rd, OPCODE_ITYPE};
 
 expected_result = $signed(rs1_val) >>> shamt_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -580,7 +573,7 @@ instruction = {FUNCT7_SRLI, shamt_val, rs1, FUNCT3_SRLI, rd, OPCODE_ITYPE};
 
 expected_result = rs1_val >>> shamt_val;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin
@@ -598,7 +591,7 @@ instruction = {imm_val, rd, OPCODE_UTYPE};
 
 expected_result = imm_val << 12;
 
-#2;
+#1;
 
 // Check the result
 if (result !== expected_result) begin

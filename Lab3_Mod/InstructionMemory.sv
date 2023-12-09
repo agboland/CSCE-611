@@ -8,6 +8,7 @@ module InstructionMemory (
     // Define the memory size and file name
     localparam MEM_SIZE = 4096;
     localparam FILENAME = "instmem.dat";
+   
 
     // Internal memory array to store instructions
     reg [31:0] memory[0:MEM_SIZE-1];

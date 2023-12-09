@@ -4,20 +4,21 @@ module CPU (
     input logic [31:0] GPIO_in,
 	 
     output wire [31:0] GPIO_out,
-    output wire [31:0] regsel_WB_simtop,
-    output wire [6:0] opcode_simtop
+    output wire [31:0] regsel_WB_simtop
 );
 
-	//logic [31:0] inst_ram [4095:0];
-	//initial $readmemh ("instmem.dat",inst_ram);
+	logic [31:0] inst_ram [4095:0];
+	initial $readmemh ("instmem.dat",inst_ram);
+	
+	
 	
 	logic [11:0] PC_FETCH;
 	logic [31:0] instruction_EX;
 	
 	
 	//----------------------------------------------------Instruction memory
-	//InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX)); // Normal Instmem
-	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(regsel_WB_simtop)); // Probe instmem output
+	//InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX));
+	
 	
 	
 	
@@ -32,8 +33,8 @@ module CPU (
 	wire [6:0] imm7;
 	wire [4:0] imm5;
 	wire [19:0] imm20;
-	//InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));
-	InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode_simtop), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));	
+	InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));
+	
 	
 	
 	
@@ -101,8 +102,8 @@ module CPU (
 	
 	
 	//---------------------------------------------------regsel_WB
-	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); // Normal output of regsel_WB
-	//mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(regsel_WB_simtop)); // Probe output of regsel_WB
+	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); // Probe output of regsel_WB
+	//mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(regsel_WB_simtop));
 	
 	
 	
@@ -110,16 +111,14 @@ module CPU (
 	always_ff @(posedge clk) begin
 		if(~rst_n) begin
 			PC_FETCH <= 12'd0;
-			//instruction_EX <- 32'd0;
-			//instruction_EX <= 32'd0;
+			instruction_EX <= 32'd0;
 		end else begin //End IF begin Else
 			PC_FETCH <= PC_FETCH + 1'b1;
-			//instruction_EX <- inst_ram[PC_FETCH];
-			//instruction_EX <= inst_ram[PC_FETCH];
+			instruction_EX <= inst_ram[PC_FETCH];
 		end // End Else IF
 	end //End always_ff
 	
-	
+	assign regsel_WB_simtop = instruction_EX;
 	
 	
 
