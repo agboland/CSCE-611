@@ -27,7 +27,7 @@ module InstructionMemory (
     end
 
     // Logic to output the instruction based on the address
-    always @(posedge clk or negedge reset) begin
+    always @(posedge clk) begin
         if (~reset) begin
             instruction <= 32'b0; // Reset the output to 0
         end else begin
