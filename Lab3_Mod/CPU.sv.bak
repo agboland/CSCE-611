@@ -16,8 +16,8 @@ module CPU (
 	
 	
 	//----------------------------------------------------Instruction memory
-	//InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX)); // Normal Instmem
-	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(regsel_WB_simtop)); // Probe instmem output
+	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX));
+	
 	
 	
 	
@@ -101,8 +101,8 @@ module CPU (
 	
 	
 	//---------------------------------------------------regsel_WB
-	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); // Normal output of regsel_WB
-	//mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(regsel_WB_simtop)); // Probe output of regsel_WB
+	//mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); // Probe output of regsel_WB
+	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(regsel_WB_simtop));
 	
 	
 	

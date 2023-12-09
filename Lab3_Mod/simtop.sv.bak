@@ -148,6 +148,13 @@ module simtop;
         // Test case loop 
         while (!done) begin
 
+		expected_result = 7'h33;
+		   if (result !== expected_result) begin
+                $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
+                done = 1;
+            end
+test_count = test_count + 1;
+
 			rs1 = 5'd1;
 			rs2 = 5'd2;
 			rd = 5'd3;
