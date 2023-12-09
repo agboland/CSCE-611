@@ -1,7 +1,7 @@
 module InstructionDecoder (
     input [31:0] instruction,
     output [6:0] opcode,
-    output [4:0] funct3,
+    output [2:0] funct3,
     output [6:0] funct7,
     output [4:0] rd,
     output [4:0] rs1,
@@ -9,7 +9,7 @@ module InstructionDecoder (
     output [11:0] imm12,
     output [6:0] imm7,
     output [4:0] imm5,
-    output [31:0] imm20
+    output [19:0] imm20
 );
     // Extract opcode field (bits 6-0)
     assign opcode = instruction[6:0];

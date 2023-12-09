@@ -6,7 +6,7 @@ module register_1(
 	input wire in,
 	//input wire we,
 	
-	output reg out
+	output logic out
 
 );
 

@@ -1,11 +1,11 @@
 /* 2 input mux */
 module mux_2(
 
-	input wire a,
-	input wire b,
+	input wire [31:0] a,
+	input wire [31:0] b,
 	input wire select,
 	
-	output wire y
+	output wire [31:0] y
 
 );
 

@@ -6,11 +6,11 @@ module controlUnit (
 	 input wire [2:0] funct3,
 	 input wire [6:0] opcode,
 
-    output reg alusrc_EX,
-	 output reg regwrite_EX,
-	 output reg [1:0] regsel_EX,
-	 output reg [3:0] aluop_EX,
-	 output reg gpio_we
+         output logic alusrc_EX,
+	 output logic regwrite_EX,
+	 output logic [1:0] regsel_EX,
+	 output logic [3:0] aluop_EX,
+	 output logic gpio_we
 );
 
 

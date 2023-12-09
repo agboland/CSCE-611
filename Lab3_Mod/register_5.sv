@@ -6,7 +6,7 @@ module register_5(
 	input wire [4:0] in,
 	//input wire we,
 	
-	output reg [4:0] out
+	output logic [4:0] out
 
 );
 
