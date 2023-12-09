@@ -7,8 +7,8 @@ module CPU (
     output wire [31:0] regsel_WB_simtop
 );
 
-	logic [31:0] inst_ram [4095:0];
-	initial $readmemh ("instmem.dat",inst_ram);
+	//logic [31:0] inst_ram [4095:0];
+	//initial $readmemh ("instmem.dat",inst_ram);
 	
 	
 	
@@ -17,7 +17,7 @@ module CPU (
 	
 	
 	//----------------------------------------------------Instruction memory
-	//InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX));
+	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(regsel_WB_simtop));
 	
 	
 	
@@ -111,14 +111,14 @@ module CPU (
 	always_ff @(posedge clk) begin
 		if(~rst_n) begin
 			PC_FETCH <= 12'd0;
-			instruction_EX <= 32'd0;
+			//instruction_EX <= 32'd0;
 		end else begin //End IF begin Else
 			PC_FETCH <= PC_FETCH + 1'b1;
-			instruction_EX <= inst_ram[PC_FETCH];
+			//instruction_EX <= inst_ram[PC_FETCH];
 		end // End Else IF
 	end //End always_ff
 	
-	assign regsel_WB_simtop = instruction_EX;
+	//assign regsel_WB_simtop = instruction_EX;
 	
 	
 

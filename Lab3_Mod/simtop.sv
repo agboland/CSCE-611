@@ -131,7 +131,11 @@ module simtop;
     initial begin
         clk = 0;
         rst = 0;
-        #2
+		  
+		  clk = 1;
+		  clk = 0;
+        //#2
+		  
 		  rst = 1;
 
         // Test cases
@@ -158,7 +162,9 @@ module simtop;
 				
 			expected_result = rs1_val + rs2_val;
 				
-            #2;
+            //#2;
+				clk = 1;
+				clk = 0;
 
             // Check the result
             if (result !== expected_result) begin
@@ -180,7 +186,9 @@ module simtop;
 
 			expected_result = rs1_val - rs2_val;
 
-			#2;
+			clk = 1;
+		   clk = 0;
+			//#2;
 			
             // Check the result** Error: C:/Users/tacob/Downloads/CSCE-611-main/CSCE-611-main/Lab3/testBench.sv(150): (vlog-2730) Undefined variable: 'ADD_instruction'.
             if (result !== expected_result) begin
@@ -202,7 +210,9 @@ instruction = {FUNCT7_AND, rs2, rs1, FUNCT3_AND, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val & rs2_val;
 
-#2;
+//#2;
+clk = 1;
+clk = 0;
 
 // Check the result
 if (result !== expected_result) begin
@@ -223,7 +233,9 @@ instruction = {FUNCT7_OR, rs2, rs1, FUNCT3_OR, rd, OPCODE_RTYPE};
 
 expected_result = rs1_val | rs2_val;
 
-#1;
+//#1;
+clk = 1;
+clk = 0;
 
 // Check the result
 if (result !== expected_result) begin

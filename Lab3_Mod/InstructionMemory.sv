@@ -12,15 +12,23 @@ module InstructionMemory (
 
     // Internal memory array to store instructions
     reg [31:0] memory[0:MEM_SIZE-1];
+	 
+	 reg i = 0;
 
     // Read the instruction memory contents from a file
     initial begin
         $readmemh(FILENAME, memory);
+		
+//		  for (int i = 0; i < 100; i++)
+//		  while(i < 100) begin
+//		    memory[i] = 32'hBEEF;
+//			 i = i + 1;
+//		  end
     end
 
     // Logic to output the instruction based on the address
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
+    always @(posedge clk or negedge reset) begin
+        if (~reset) begin
             instruction <= 32'b0; // Reset the output to 0
         end else begin
             instruction <= memory[address];
