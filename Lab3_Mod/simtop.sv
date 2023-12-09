@@ -125,14 +125,14 @@ module simtop;
 			
 
 		initial begin
-			clk = 0;
-			rst = 0; // High
+			clk = 0; #20;
+			rst = 0; #20;// High
 			
-			repeat(2) clk = ~clk; // Cycle Clock
-			rst = 1; // Low
+			repeat(2) clk = ~clk; #20; // Cycle Clock
+			rst = 1; #20; // Low
 				
 			for(int i = 0; i < 20; i++) begin
-				repeat(2) clk = ~clk; // Cycle Clock
+				repeat(2) clk = ~clk; #20; // Cycle Clock
 				$display("Output of InstMem: %h", result);
 			end
 			
