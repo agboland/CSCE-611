@@ -3,23 +3,30 @@ module CPU (
     input wire rst_n,
     input wire [31:0] GPIO_in,
 	 
-    output reg [31:0] GPIO_out,
-    output reg [31:0] regsel_WB_simtop
+    output logic [31:0] GPIO_out,
+	 
+	 // Outpus for test bench
+    output logic [31:0] inst_mem_out,
+	 output logic [4:0] regdest_WB_out
+//	 output logic [6:0] opcode,
+//	 output logic [2:0] funct3,
+//	 output logic [6:0] funct7,
+//	 output logic [4:0] rd,
+//	 output logic [4:0] rs1,
+//	 output logic [4:0] rs2,
+//	 output logic [11:0] imm12,
+//	 output logic [6:0] imm7,
+//	 output logic [4:0] imm5,
+//	 output logic [19:0] imm20
 );
-
-	//logic [31:0] inst_ram [4095:0];
-	//initial $readmemh ("instmem.dat",inst_ram);
-	
-	
 	
 	logic [11:0] PC_FETCH;
 	logic [31:0] instruction_EX;
 	
 	
 	//----------------------------------------------------Instruction memory
-	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(regsel_WB_simtop));
-	
-	
+	InstructionMemory instmem(.clk(clk), .reset(rst_n), .address(PC_FETCH), .instruction(instruction_EX));
+	assign inst_mem_out = instruction_EX;
 	
 	
 	//----------------------------------------------------Instruction decoder module
@@ -32,7 +39,7 @@ module CPU (
 	wire [11:0] imm12;
 	wire [6:0] imm7;
 	wire [4:0] imm5;
-	wire [19:0] imm20;
+	wire [19:0] imm20; // // RD is probed here:
 	InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));
 	
 	
@@ -41,6 +48,7 @@ module CPU (
 	//----------------------------------------------------regdest_WB register
 	logic [4:0] writeaddr;
 	register_5 regdest_WB(.clk(clk), .in(rd), .out(writeaddr));
+	assign regdest_WB_out = rd; // Probe for test bench
 	
 	
 	
@@ -102,9 +110,9 @@ module CPU (
 	
 	
 	//---------------------------------------------------regsel_WB
-	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); // Probe output of regsel_WB
-	//mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(regsel_WB_simtop));
+	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); 
 	
+	//assign regsel_WB_out = wd; // Probe for test bench
 	
 	
 	
