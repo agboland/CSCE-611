@@ -2,7 +2,7 @@ module InstructionMemory (
     input wire clk,
     input wire reset,
     input wire [11:0] address,
-    output logic [31:0] instruction
+    output reg [31:0] instruction
 );
 
     // Define the memory size and file name

@@ -1,10 +1,10 @@
 module CPU (
-    input logic clk,
-    input logic rst_n,
-    input logic [31:0] GPIO_in,
+    input wire clk,
+    input wire rst_n,
+    input wire [31:0] GPIO_in,
 	 
-    output wire [31:0] GPIO_out,
-    output wire [31:0] regsel_WB_simtop
+    output reg [31:0] GPIO_out,
+    output reg [31:0] regsel_WB_simtop
 );
 
 	//logic [31:0] inst_ram [4095:0];
