@@ -11,10 +11,7 @@ module register_5(
 );
 
 always_ff @(posedge clk) begin
-//	if(we) begin
-//			out = in;
-//	end
-	out = in;
+	out <= in;
 end //End always_ff
 
 endmodule
