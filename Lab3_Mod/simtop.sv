@@ -15,7 +15,7 @@ module simtop;
 	 wire [1:0] regselWB_reg_out;
 	 wire [31:0] GPIOoutreg_out;
 	 wire [31:0] GPIOin_reg_out;
-	 wire [4:0] Rwb_reg_out; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+	 wire [31:0] Rwb_reg_out; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
 	 wire [31:0] IMM_WB_reg_out;
 	 
 
@@ -173,10 +173,10 @@ module simtop;
 		end		
 			
 		
-		for(int i = 0; i < 13; i++) begin
+		for(int i = 0; i < 20; i++) begin
 		
 			$display("Output of instmem for instruction %2d: %h", i + 1, inst_mem_out);
-			$display("Output of rs1 for instruction %2d: %h", i + 1, Rwb_reg_out);
+			//$display("Output of rs1 for instruction %2d: %h", i + 1, Rwb_reg_out);
 			
 			repeat(2) begin 
 				clk = ~clk; #1; // Cycle clock
@@ -187,7 +187,7 @@ module simtop;
 			$display("Output of regdsel_reg_WB for instruction %2d: %h", i + 1, regselWB_reg_out);
 			$display("Output of GPIO_out for instruction %2d: %h", i + 1, GPIOoutreg_out);
 			$display("Output of GPIO_in_reg for instruction %2d: %h", i + 1, GPIOin_reg_out);
-			//$display("Output of Rwb_WB_reg for instruction %2d: %h", i + 1, Rwb_reg_out);
+			$display("Output of Rwb_WB_reg for instruction %2d: %h", i + 1, Rwb_reg_out);
 			$display("Output of IMM_reg_WB for instruction %2d: %h\n\n", i + 1, IMM_WB_reg_out);
 			
 			
