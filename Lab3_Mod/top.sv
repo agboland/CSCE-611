@@ -95,7 +95,7 @@ module top (
 	end
 	
 	wire [31:0] GPIO_out;
-	CPU mycpu(.clk(CLOCK_50),.rst_n(KEY[0]), .GPIO_in({10'h0, KEY[3:0], SW[17:0]}), .GPIO_out(GPIO_out));
+	CPU mycpu(.clk(CLOCK_50),.rst_n(KEY[0]), .GPIO_in({10'h0, ~KEY[3:0], SW[17:0]}), .GPIO_out(GPIO_out));
 	
 	hexdriver driver0(.val(GPIO_out[3:0]), 	.HEX(HEX0[6:0]));
 	hexdriver driver1(.val(GPIO_out[7:4]), 	.HEX(HEX1[6:0]));

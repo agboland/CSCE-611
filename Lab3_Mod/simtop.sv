@@ -15,7 +15,7 @@ module simtop;
 	 wire [1:0] regselWB_reg_out;
 	 wire [31:0] GPIOoutreg_out;
 	 wire [31:0] GPIOin_reg_out;
-	 wire [31:0] Rwb_reg_out; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+	 wire [31:0] Rwb_reg_out;
 	 wire [31:0] IMM_WB_reg_out;
 	 
 
