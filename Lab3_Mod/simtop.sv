@@ -15,7 +15,7 @@ module simtop;
 	 wire [1:0] regselWB_reg_out;
 	 wire [31:0] GPIOoutreg_out;
 	 wire [31:0] GPIOin_reg_out;
-	 wire [31:0] Rwb_reg_out;
+	 wire [4:0] Rwb_reg_out; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
 	 wire [31:0] IMM_WB_reg_out;
 	 
 
@@ -37,6 +37,7 @@ module simtop;
 		  // Test bench probing
 		  .inst_mem_out(inst_mem_out),
 		  .regdest_WB_out(regdest_WB_out),
+		  .regwrite_WB_out(regwrite_WB_out),
 		  .regselWB_reg_out(regselWB_reg_out),
 		  .GPIOoutreg_out(GPIOoutreg_out),
 		  .GPIOin_reg_out(GPIOin_reg_out),
@@ -175,7 +176,7 @@ module simtop;
 		for(int i = 0; i < 13; i++) begin
 		
 			$display("Output of instmem for instruction %2d: %h", i + 1, inst_mem_out);
-			$display("Output of rd1 for instruction %2d: %h", i + 1, Rwb_reg_out);
+			$display("Output of rs1 for instruction %2d: %h", i + 1, Rwb_reg_out);
 			
 			repeat(2) begin 
 				clk = ~clk; #1; // Cycle clock

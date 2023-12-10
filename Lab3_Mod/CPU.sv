@@ -12,7 +12,7 @@ module CPU (
 	 output logic [1:0] regselWB_reg_out,
 	 output logic [31:0] GPIOoutreg_out,
 	 output logic [31:0] GPIOin_reg_out,
-	 output logic [31:0] Rwb_reg_out, // FIXXXXXXXXXXXXXXXXXXXXX
+	 output logic [4:0] Rwb_reg_out, // FIXXXXXXXXXXXXXXXXXXXXX
 	 output logic [31:0] IMM_WB_reg_out
 );
 	
@@ -107,7 +107,7 @@ module CPU (
 	//----------------------------------------------------R_WB register
 	logic [31:0] R_WB;
 	register_32a Rwb_reg(.clk(clk), .in(R_EX), .out(R_WB));
-	assign Rwb_reg_out = rd1; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	assign Rwb_reg_out = rs1; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	
 	//----------------------------------------------------IMM_WB register
 	logic [31:0] IMM_WB;
