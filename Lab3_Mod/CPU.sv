@@ -5,19 +5,15 @@ module CPU (
 	 
     output logic [31:0] GPIO_out,
 	 
-	 // Outpus for test bench
+	 // Outputs for test bench
     output logic [31:0] inst_mem_out,
-	 output logic [4:0] regdest_WB_out
-//	 output logic [6:0] opcode,
-//	 output logic [2:0] funct3,
-//	 output logic [6:0] funct7,
-//	 output logic [4:0] rd,
-//	 output logic [4:0] rs1,
-//	 output logic [4:0] rs2,
-//	 output logic [11:0] imm12,
-//	 output logic [6:0] imm7,
-//	 output logic [4:0] imm5,
-//	 output logic [19:0] imm20
+	 output logic [4:0] regdest_WB_out,
+	 output logic regwrite_WB_out,
+	 output logic [1:0] regselWB_reg_out,
+	 output logic [31:0] GPIOoutreg_out,
+	 output logic [31:0] GPIOin_reg_out,
+	 output logic [31:0] Rwb_reg_out, // FIXXXXXXXXXXXXXXXXXXXXX
+	 output logic [31:0] IMM_WB_reg_out
 );
 	
 	logic [11:0] PC_FETCH;
@@ -39,7 +35,7 @@ module CPU (
 	wire [11:0] imm12;
 	wire [6:0] imm7;
 	wire [4:0] imm5;
-	wire [19:0] imm20; // // RD is probed here:
+	wire [19:0] imm20; 
 	InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));
 	
 	
@@ -48,7 +44,7 @@ module CPU (
 	//----------------------------------------------------regdest_WB register
 	logic [4:0] writeaddr;
 	register_5 regdest_WB(.clk(clk), .in(rd), .out(writeaddr));
-	assign regdest_WB_out = rd; // Probe for test bench
+	assign regdest_WB_out = writeaddr; // Probe for test bench
 	
 	
 	
@@ -79,21 +75,25 @@ module CPU (
 	
 	//----------------------------------------------------Regwrite_EX register
 	register_1 regwrite_WB(.clk(clk), .in(regwrite_EX), .out(we));
+	assign regwrite_WB_out = we;
 	
 	
 	
 	//----------------------------------------------------Regsel_EX register
 	logic [1:0] regsel_WB;
 	register_2 regselWB_reg(.clk(clk), .in(regsel_EX), .out(regsel_WB));
+	assign regselWB_reg_out = regsel_WB;
 	
 	
 	
 	//----------------------------------------------------GPIO_out register
 	register_32s GPIOoutreg(.clk(clk), .we(gpio_we), .in(rd1), .out(GPIO_out));
+	assign GPIOoutreg_out = GPIO_out;
 	
 	//----------------------------------------------------GPIO_in register
 	logic [31:0] GPIOin_WB;
 	register_32a GPIOin_reg(.clk(clk), .in(GPIO_in), .out(GPIOin_WB));
+	assign GPIOin_reg_out = GPIOin_WB;
 	
 	//----------------------------------------------------2 input mux
 	//wire [31:0] mux2_out;
@@ -107,10 +107,15 @@ module CPU (
 	//----------------------------------------------------R_WB register
 	logic [31:0] R_WB;
 	register_32a Rwb_reg(.clk(clk), .in(R_EX), .out(R_WB));
+	assign Rwb_reg_out = rd1; // FIXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	
+	//----------------------------------------------------IMM_WB register
+	logic [31:0] IMM_WB;
+	register_32a IMM_WB_reg(.clk(clk), .in({imm20, 12'b0}), .out(IMM_WB));
+	assign IMM_WB_reg_out = IMM_WB;
 	
 	//---------------------------------------------------regsel_WB
-	mux_3 mux3(.a(GPIOin_WB), .b({imm20, 12'b0}), .c(R_WB), .select(regsel_WB), .y(wd)); 
+	mux_3 mux3(.a(GPIOin_WB), .b(IMM_WB), .c(R_WB), .select(regsel_WB), .y(wd)); 
 	
 	//assign regsel_WB_out = wd; // Probe for test bench
 	

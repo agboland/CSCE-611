@@ -7,14 +7,21 @@ module simtop;
     // Declare signals and variables
     logic clk;
     logic rst;
+	 
+	 // Probing CPU for test bench
     wire [31:0] inst_mem_out;
 	 wire [4:0] regdest_WB_out;
-    wire [6:0] opcode_simtop;
+	 wire regwrite_WB_out;
+	 wire [1:0] regselWB_reg_out;
+	 wire [31:0] GPIOoutreg_out;
+	 wire [31:0] GPIOin_reg_out;
+	 wire [31:0] Rwb_reg_out;
+	 wire [31:0] IMM_WB_reg_out;
+	 
+
+
     wire [31:0] dummy;
     wire [31:0] dummy1;
-    logic [31:0] instruction;
-    logic [5:0] test_count;
-    logic [31:0] regfile[0:31];
     logic [11:0] address_input; 
     logic [11:0] imm_val;
     logic [4:0] shamt_val;
@@ -29,9 +36,12 @@ module simtop;
 		  
 		  // Test bench probing
 		  .inst_mem_out(inst_mem_out),
-		  .regdest_WB_out(regdest_WB_out)
-		  
-        //.opcode_simtop(dummy1)
+		  .regdest_WB_out(regdest_WB_out),
+		  .regselWB_reg_out(regselWB_reg_out),
+		  .GPIOoutreg_out(GPIOoutreg_out),
+		  .GPIOin_reg_out(GPIOin_reg_out),
+		  .Rwb_reg_out(Rwb_reg_out),
+		  .IMM_WB_reg_out(IMM_WB_reg_out) 
     );
 	 
 	 
@@ -139,539 +149,54 @@ module simtop;
 			
 			
 		// for inst_mem		
-		for(int i = 0; i < 20; i++) begin
-			repeat(2) begin
-				clk = ~clk; #1; // Cycle Clock
-			end
-			$display("Output of InstMem: %h", inst_mem_out);
-		end
+//		for(int i = 0; i < 13; i++) begin
+//			repeat(2) begin
+//				clk = ~clk; #1; // Cycle Clock
+//			end
+//			$display("Output of InstMem: %h", inst_mem_out);
+//		end
 
 			
 		// Reset CPU again
-		rst = 0; #1; // Enable sync reset
-		repeat(2) begin 
-			clk = ~clk; #1; // Cycle the clock once
-		end
-		rst = 1; #1; // Disable sync reset
+//		rst = 0; #1; // Enable sync reset
+//		repeat(2) begin 
+//			clk = ~clk; #1; // Cycle the clock once
+//		end
+//		rst = 1; #1; // Disable sync reset
 		
 		
 		
 		// Get first instruction
 		repeat(2) begin
 			clk = ~clk; #1; // Cycle the clock once
-		end
-		
-		$display("Output of regdest_WB for instruction 0: %h", regdest_WB_out);
+		end		
+			
 		
 		for(int i = 0; i < 13; i++) begin
 		
+			$display("Output of instmem for instruction %2d: %h", i + 1, inst_mem_out);
+			$display("Output of rd1 for instruction %2d: %h", i + 1, Rwb_reg_out);
+			
 			repeat(2) begin 
 				clk = ~clk; #1; // Cycle clock
 			end
 		
-			$display("Output of regdest_WB for instruction %d: %h", i + 1, regdest_WB_out);
+			$display("Output of regdest_reg_WB for instruction %2d: %h", i + 1, regdest_WB_out);
+			$display("Output of regwrite_reg_WB for instruction %2d: %h", i + 1, regwrite_WB_out);
+			$display("Output of regdsel_reg_WB for instruction %2d: %h", i + 1, regselWB_reg_out);
+			$display("Output of GPIO_out for instruction %2d: %h", i + 1, GPIOoutreg_out);
+			$display("Output of GPIO_in_reg for instruction %2d: %h", i + 1, GPIOin_reg_out);
+			//$display("Output of Rwb_WB_reg for instruction %2d: %h", i + 1, Rwb_reg_out);
+			$display("Output of IMM_reg_WB for instruction %2d: %h\n\n", i + 1, IMM_WB_reg_out);
+			
+			
+//			repeat(2) begin 
+//				clk = ~clk; #1; // Cycle clock
+//			end
+//		
+//			$display("Output of regdest_WB for instruction %2d: %h\n\n", i + 1, regdest_WB_out);
 		end
+		
 			
 	end
-
-
-
-//    // Reset generation
-//    initial begin
-//        clk = 0;
-//        rst = 0;
-//		  
-//		  clk = 1;
-//		  clk = 0;
-//        //#2
-//		  
-//		  rst = 1;
-//
-//        // Test cases
-//        test_count = 0;
-//        done = 0;
-//
-//        // Test case loop 
-//        while (!done) begin
-//
-//			rs1 = 5'd1;
-//			rs2 = 5'd2;
-//			rd = 5'd3;
-//		  
-//
-//		  	//ADD TEST
-//			rs1_val = 32'h00000001;
-//			rs2_val = 32'h00000001;
-//			regfile[rs1] = rs1_val;
-//			regfile[rs2] = rs2_val;
-//
-//				
-//			instruction = {FUNCT7_ADD, rs2, rs1, FUNCT3_ADD, rd, OPCODE_RTYPE};
-//				
-//				
-//			expected_result = rs1_val + rs2_val;
-//				
-//            //#2;
-//				clk = 1;
-//				clk = 0;
-//
-//            // Check the result
-//            if (result !== expected_result) begin
-//                $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//                done = 1;
-//            end
-//				
-//            // Increment the test count
-//            test_count = test_count + 1;
-//				
-//
-//			//SUB TEST
-//			rs1_val = 32'h00000002;
-//			rs2_val = 32'h00000001;
-//			regfile[rs1] = rs1_val;
-//			regfile[rs2] = rs2_val;
-//
-//			instruction = {FUNCT7_SUB, rs2, rs1, FUNCT3_SUB, rd, OPCODE_RTYPE};			
-//
-//			expected_result = rs1_val - rs2_val;
-//
-//			clk = 1;
-//		   clk = 0;
-//			//#2;
-//			
-//            // Check the result** Error: C:/Users/tacob/Downloads/CSCE-611-main/CSCE-611-main/Lab3/testBench.sv(150): (vlog-2730) Undefined variable: 'ADD_instruction'.
-//            if (result !== expected_result) begin
-//                $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//                done = 1;
-//            end				
-//
-//            // Increment the test count
-//            test_count = test_count + 1;            
-//
-//
-//		//AND TEST
-//rs1_val = 32'h0000000F;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_AND, rs2, rs1, FUNCT3_AND, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val & rs2_val;
-//
-////#2;
-//clk = 1;
-//clk = 0;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////OR TEST
-//rs1_val = 32'h0000000F;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_OR, rs2, rs1, FUNCT3_OR, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val | rs2_val;
-//
-////#1;
-//clk = 1;
-//clk = 0;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////XOR TEST
-//rs1_val = 32'h0000000F;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_XOR, rs2, rs1, FUNCT3_XOR, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val ^ rs2_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SLL TEST
-//rs1_val = 32'h00000004;
-//rs2_val = 32'h00000003; // Shifting by 3 bits
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_SLL, rs2, rs1, FUNCT3_SLL, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val << rs2_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-//
-////SRA TEST
-//rs1_val = 32'hF0000004; // A negative number to show arithmetic shift
-//rs2_val = 32'h00000003; // Shifting by 3 bits
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_SRA, rs2, rs1, FUNCT3_SRA, rd, OPCODE_RTYPE};
-//
-//expected_result = $signed(rs1_val) >>> rs2_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SRL TEST
-//rs1_val = 32'hF0000004;
-//rs2_val = 32'h00000003; // Shifting by 3 bits
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_SRL, rs2, rs1, FUNCT3_SRL, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val >>> rs2_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SLT TEST
-//rs1_val = 32'h00000004;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_SLT, rs2, rs1, FUNCT3_SLT, rd, OPCODE_RTYPE};
-//
-//expected_result = ($signed(rs1_val) < $signed(rs2_val)) ? 1 : 0;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SLTU TEST
-//rs1_val = 32'h00000004;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_SLTU, rs2, rs1, FUNCT3_SLTU, rd, OPCODE_RTYPE};
-//
-//expected_result = (rs1_val < rs2_val) ? 1 : 0;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////MUL TEST
-//rs1_val = 32'h00000004;
-//rs2_val = 32'h00000003;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_MUL, rs2, rs1, FUNCT3_MUL, rd, OPCODE_RTYPE};
-//
-//expected_result = rs1_val * rs2_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////MULH TEST
-//rs1_val = 32'h0000FFFF;
-//rs2_val = 32'h0000FFFF;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_MULH, rs2, rs1, FUNCT3_MULH, rd, OPCODE_RTYPE};
-//
-//expected_result = ($signed(rs1_val) * $signed(rs2_val)) >>> 32;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////MULHU TEST
-//rs1_val = 32'h0000FFFF;
-//rs2_val = 32'h0000FFFF;
-//regfile[rs1] = rs1_val;
-//regfile[rs2] = rs2_val;
-//
-//instruction = {FUNCT7_MULHU, rs2, rs1, FUNCT3_MULHU, rd, OPCODE_RTYPE};
-//
-//expected_result = (rs1_val * rs2_val) >>> 32;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////CSRRW TEST
-////address_input = 32'h000000C0; // An example CSR address
-////rs1_val = 32'h0000000A; // Value to write to CSR
-////regfile[rs1] = rs1_val;
-//
-////instruction = {address_input, rs1, FUNCT3_CSSRW, rd, OPCODE_CSRRW};
-//
-////expected_result = csr_read(address_input); // Assuming csr_read is a function that reads CSR
-//
-////#10;
-//
-//// Check the result and also check if the CSR is updated
-////if (result !== expected_result || csr_read(address_input) !== rs1_val) begin
-////    $display("Test case %d failed: Expected %h, Got %h or CSR not updated", test_count, expected_result, result);
-////    done = 1;
-////end
-//
-//// Increment the test count
-////test_count = test_count + 1;
-//
-////ADDI TEST
-//rs1_val = 32'h00000004;
-//imm_val = 32'h00000003; // Immediate value
-//regfile[rs1] = rs1_val;
-//
-//instruction = {imm_val, rs1, FUNCT3_ADDI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val + imm_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////ANDI TEST
-//rs1_val = 32'h0000000F;
-//imm_val = 32'h00000003; // Immediate value
-//regfile[rs1] = rs1_val;
-//
-//instruction = {imm_val, rs1, FUNCT3_ANDI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val & imm_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////ORI TEST
-//rs1_val = 32'h0000000F;
-//imm_val = 32'h00000003; // Immediate value
-//regfile[rs1] = rs1_val;
-//
-//instruction = {imm_val, rs1, FUNCT3_ORI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val | imm_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////XORI TEST
-//rs1_val = 32'h0000000F;
-//imm_val = 32'h00000003; // Immediate value
-//regfile[rs1] = rs1_val;
-//
-//instruction = {imm_val, rs1, FUNCT3_XORI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val ^ imm_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SLLI TEST
-//rs1_val = 32'h0000000F;
-//shamt_val = 3; // Shift amount
-//regfile[rs1] = rs1_val;
-//
-//instruction = {shamt_val, rs1, FUNCT3_SLLI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val << shamt_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SRAI TEST
-//rs1_val = 32'hFFFFFFF0;
-//shamt_val = 4; // Shift amount
-//regfile[rs1] = rs1_val;
-//
-//instruction = {FUNCT7_SRAI, shamt_val, rs1, FUNCT3_SRAI, rd, OPCODE_ITYPE};
-//
-//expected_result = $signed(rs1_val) >>> shamt_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////SRLI TEST
-//rs1_val = 32'hFFFFFFFF;
-//shamt_val = 4'b0100; // Shift amount
-//regfile[rs1] = rs1_val;
-//
-//instruction = {FUNCT7_SRLI, shamt_val, rs1, FUNCT3_SRLI, rd, OPCODE_ITYPE};
-//
-//expected_result = rs1_val >>> shamt_val;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-////LUI TEST
-//imm_val = 32'h0000F000; // Immediate value
-//regfile[imm_val] = imm_val;
-//instruction = {imm_val, rd, OPCODE_UTYPE};
-//
-//expected_result = imm_val << 12;
-//
-//#1;
-//
-//// Check the result
-//if (result !== expected_result) begin
-//    $display("Test case %d failed: Expected %h, Got %h", test_count, expected_result, result);
-//    done = 1;
-//end
-//
-//// Increment the test count
-//test_count = test_count + 1;
-//
-//            // If all tests are done, stop the simulation
-//            if (test_count >= NUM_TESTS) begin
-//                $display("All test cases passed.");
-//                done = 1;
-//            end
-//        end
-//
-//        // Finish simulation
-//        $finish;
-//    end
-
-endmodule
+endmodule 
