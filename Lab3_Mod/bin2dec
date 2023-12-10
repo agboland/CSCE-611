@@ -1,0 +1,39 @@
+addi x0,x0,0
+addi x1,x0,10
+
+## Read csrrw
+csrrw x0,0xf00,0
+
+
+# Extract and process 1st digit
+andi x2,x0,1
+mul x3,x0,x1
+addi x0,x3,x2
+srl x0, x0, 1
+
+# Extrace and process 2nd digit
+andi x2,x0,1
+mul x3,x0,x1
+addi x0,x3,x2
+srl x0, x0, 1
+
+# Extrace and process 3nd digit
+andi x2,x0,1
+mul x3,x0,x1
+addi x0,x3,x2
+srl x0, x0, 1
+
+# Extrace and process 4th digit
+andi x2,x0,1
+mul x3,x0,x1
+addi x0,x3,x2
+srl x0, x0, 1
+
+# Extrace and process 5th digit
+andi x2,x0,1
+mul x3,x0,x1
+addi x0,x3,x2
+srl x0, x0, 1
+
+#Write csrrw
+csrrw 0,0xf02,x0
