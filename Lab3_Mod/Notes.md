@@ -3,6 +3,9 @@ Ignore this:
 
 
 
+# Assume the input value in binary is stored in s8
+# and you want to convert it into a 32-bit BCD value
+
 # Set up registers
 li t0, 0       # t0 will store the BCD result
 li t1, 10      # t1 will be used for multiplication by 10
@@ -38,6 +41,5 @@ mul t5, t4, t1   # Multiply by 10
 and t5, t5, t2   # Extract lower nibble
 and t5, t5, t3   # Adjust for BCD
 add t0, t0, t5   # Add the extracted nibble to the result
-slli t0, t0, 4   # Shift the BCD result to the left
 
 # At this point, the BCD value should be in t0
