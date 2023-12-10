@@ -3,77 +3,65 @@ Ignore this:
 
 
 
-# Process 8 iterations (32 bits / 4 bits per iteration = 8 iterations)
-# Each iteration processes 4 bits of the input value
+lui t0, 0x19        # Load 10 into t0 (upper immediate for 10)
+    addi t0, t0, -10    # Complete loading 10 into t0 (lower immediate)
+    li t1, 0            # Initialize t1 to store the BCD result
 
-# Iteration 1
-mul t5, t4, t1  # Multiply by 10
-and t5, t5, t2  # Extract lower nibble
-and t5, t5, t3  # Adjust for BCD
-add t0, t0, t5  # Add the extracted nibble to the result
+    # Iteration 1
+    slli t1, t1, 4      # Shift BCD result left by 4 bits
 
-# Shift and prepare for the next iteration
-slli t0, t0, 4  # Shift the BCD result to the left
-srl t4, t4, 4   # Shift the input value to the right
+    mul t2, s8, t0      # Multiply s8 by 10
+    srai t2, t2, 31     # t2 = (s8 * 10) >> 31
 
-# Iteration 2
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    add t1, t1, t2      # Add (s8 * 10) >> 31 to BCD result
 
-slli t0, t0, 4
-srl t4, t4, 4
+    # Iteration 2
+    slli t1, t1, 4
 
-# Iteration 3
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    mul t2, s8, t0
+    srai t2, t2, 31
 
-slli t0, t0, 4
-srl t4, t4, 4
+    add t1, t1, t2
 
-# Iteration 4
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    # Iteration 3 (repeat the same steps for remaining iterations)
+    slli t1, t1, 4
 
-slli t0, t0, 4
-srl t4, t4, 4
+    mul t2, s8, t0
+    srai t2, t2, 31
 
-# Iteration 5
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    add t1, t1, t2
 
-slli t0, t0, 4
-srl t4, t4, 4
+    slli t1, t1, 4
 
-# Iteration 6
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    mul t2, s8, t0
+    srai t2, t2, 31
 
-slli t0, t0, 4
-srl t4, t4, 4
+    add t1, t1, t2
 
-# Iteration 7
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    slli t1, t1, 4
 
-slli t0, t0, 4
-srl t4, t4, 4
+    mul t2, s8, t0
+    srai t2, t2, 31
 
-# Iteration 8
-mul t5, t4, t1
-and t5, t5, t2
-and t5, t5, t3
-add t0, t0, t5
+    add t1, t1, t2
 
-# The 32-bit BCD value should now be in t0
+    slli t1, t1, 4
+
+    mul t2, s8, t0
+    srai t2, t2, 31
+
+    add t1, t1, t2
+
+    slli t1, t1, 4
+
+    mul t2, s8, t0
+    srai t2, t2, 31
+
+    add t1, t1, t2
+
+    slli t1, t1, 4
+
+    mul t2, s8, t0
+    srai t2, t2, 31
+
+    add t1, t1, t2
