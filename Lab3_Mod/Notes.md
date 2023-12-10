@@ -3,43 +3,77 @@ Ignore this:
 
 
 
-# Assume the input value in binary is stored in s8
-# and you want to convert it into a 32-bit BCD value
-
-# Set up registers
-li t0, 0       # t0 will store the BCD result
-li t1, 10      # t1 will be used for multiplication by 10
-li t2, 0x3333  # t2 holds a mask to isolate lower nibble
-li t3, 0x5555  # t3 holds a mask to isolate upper nibble
-
-# Binary to BCD conversion (unrolled loop)
-mv t4, s8      # Copy input value to t4
+# Process 8 iterations (32 bits / 4 bits per iteration = 8 iterations)
+# Each iteration processes 4 bits of the input value
 
 # Iteration 1
-mul t5, t4, t1   # Multiply by 10
-and t5, t5, t2   # Extract lower nibble
-and t5, t5, t3   # Adjust for BCD
-add t0, t0, t5   # Add the extracted nibble to the result
-slli t0, t0, 4   # Shift the BCD result to the left
+mul t5, t4, t1  # Multiply by 10
+and t5, t5, t2  # Extract lower nibble
+and t5, t5, t3  # Adjust for BCD
+add t0, t0, t5  # Add the extracted nibble to the result
+
+# Shift and prepare for the next iteration
+slli t0, t0, 4  # Shift the BCD result to the left
+srl t4, t4, 4   # Shift the input value to the right
 
 # Iteration 2
-mul t5, t4, t1   # Multiply by 10
-and t5, t5, t2   # Extract lower nibble
-and t5, t5, t3   # Adjust for BCD
-add t0, t0, t5   # Add the extracted nibble to the result
-slli t0, t0, 4   # Shift the BCD result to the left
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+slli t0, t0, 4
+srl t4, t4, 4
 
 # Iteration 3
-mul t5, t4, t1   # Multiply by 10
-and t5, t5, t2   # Extract lower nibble
-and t5, t5, t3   # Adjust for BCD
-add t0, t0, t5   # Add the extracted nibble to the result
-slli t0, t0, 4   # Shift the BCD result to the left
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+slli t0, t0, 4
+srl t4, t4, 4
 
 # Iteration 4
-mul t5, t4, t1   # Multiply by 10
-and t5, t5, t2   # Extract lower nibble
-and t5, t5, t3   # Adjust for BCD
-add t0, t0, t5   # Add the extracted nibble to the result
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
 
-# At this point, the BCD value should be in t0
+slli t0, t0, 4
+srl t4, t4, 4
+
+# Iteration 5
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+slli t0, t0, 4
+srl t4, t4, 4
+
+# Iteration 6
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+slli t0, t0, 4
+srl t4, t4, 4
+
+# Iteration 7
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+slli t0, t0, 4
+srl t4, t4, 4
+
+# Iteration 8
+mul t5, t4, t1
+and t5, t5, t2
+and t5, t5, t3
+add t0, t0, t5
+
+# The 32-bit BCD value should now be in t0
