@@ -1,0 +1,7 @@
+ 
+
+lui t2,123
+
+add t0,x0,t2
+
+csrrw x0,2,t0
