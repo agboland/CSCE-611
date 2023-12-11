@@ -13,7 +13,22 @@ module CPU (
 	 output logic [31:0] GPIOoutreg_out,
 	 output logic [31:0] GPIOin_reg_out,
 	 output logic [31:0] Rwb_reg_out,
-	 output logic [31:0] IMM_WB_reg_out
+	 output logic [31:0] IMM_WB_reg_out,
+	 output logic [4:0] rs1_out,
+	 output logic [4:0] rs2_out,
+	 
+	 output logic [11:0] branch_addr,
+	 output logic [11:0] jal_addr,
+	 output logic [11:0] jalr_addr,
+	 output logic [1:0] pcsrc,
+	 output logic [11:0] PC_EX_out,
+	 output logic [11:0] PC_input_out,
+	 output logic zero_out,
+	 output logic [31:0] rd1_out,
+	 output logic [31:0] rd2_out,
+	 output logic [31:0] alu_b_out,
+	 //output logic [4:0] wr_addr_out,
+	 output logic [31:0] wr_data_out
 );
 	
 	logic [11:0] PC_FETCH; // Output of PC
@@ -23,16 +38,23 @@ module CPU (
 	
 	//----------------------------------------------------Program Counter
 	PC pc(.clk(clk), .rst_n(rst_n), .addr(PC_in), .PC_FETCH(PC_FETCH), .PC_FETCH_1(PC_FETCH_1));
+	assign PC_input_out = PC_in;
 	
 	logic [11:0] PC_EX;
 	//----------------------------------------------------PC fetch register
 	register_12 PC_EX_reg(.clk(clk), .in(PC_FETCH), .out(PC_EX));
+	assign PC_EX_out = PC_EX;
 	
 	logic [11:0] branch_addr_EX;
 	logic [11:0] jal_addr_EX;
 	logic [11:0] jalr_addr_EX;
+	logic [1:0] pcsrc_EX;
 	//----------------------------------------------------PC mux
 	mux_4_12 pcsrc_mux(.a(PC_FETCH_1), .b(branch_addr_EX), .c(jal_addr_EX), .d(jalr_addr_EX), .select(pcsrc_EX), .y(PC_in));
+	assign branch_addr = branch_addr_EX;
+	assign jal_addr = jal_addr_EX;
+	assign jalr_addr = jalr_addr_EX;
+	assign pcsrc = pcsrc_EX;
 	
 	
 	//----------------------------------------------------Instruction memory
@@ -51,9 +73,11 @@ module CPU (
 	wire [6:0] imm7;
 	wire [4:0] imm5;
 	wire [19:0] imm20; 
+	logic [31:0] rd1;
 	InstructionDecoder instdec(.instruction(instruction_EX), .PC_EX(PC_EX), .readdata1_EX(rd1),
 		.opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20), .jal_addr_EX(jal_addr_EX), .branch_addr_EX(branch_addr_EX), .jalr_addr_EX(jalr_addr_EX));
-	
+	assign rs1_out = rs1;
+	assign rs2_out = rs2;
 	
 	
 	
@@ -72,11 +96,11 @@ module CPU (
 	
 	//----------------------------------------------------Regfile implementation
 	logic we;
-	logic [31:0] rd1;
 	logic [31:0] rd2;
 	logic [31:0] wd;
 	regfile rf(.clk(clk), .we(we), .readaddr1(rs1), .readaddr2(rs2), .writeaddr(writeaddr), .writedata(wd), .readdata1(rd1), .readdata2(rd2));
-	
+	assign rd1_out = rd1;
+	assign rd2_out = rd2;
 	
 	
 	//----------------------------------------------------Control Unit
@@ -85,10 +109,11 @@ module CPU (
 	logic [1:0] regsel_EX;
 	logic [3:0] aluop_EX;
 	logic gpio_we;
-	logic [1:0] pcsrc_EX;
+
 	logic stall_EX;
 	logic stall_FETCH;
 	logic se_imm_sel;
+	logic zero;
 	controlUnit cu(.funct7(funct7), .imm12(imm12), .funct3(funct3), .opcode(opcode), .stall_EX(stall_EX), .zero(zero),
 		.stall_FETCH(stall_FETCH), .alusrc_EX(alusrc_EX), .regwrite_EX(regwrite_EX), .regsel_EX(regsel_EX), .aluop_EX(aluop_EX), .gpio_we(gpio_we), .pcsrc_EX(pcsrc_EX));
 	
@@ -121,11 +146,12 @@ module CPU (
 	//----------------------------------------------------2 input mux
 	logic [31:0] alu_b;
 	mux_2 mux2(.a(rd2), .b(signExtended), .select(alusrc_EX), .y(alu_b));
+	assign alu_b_out = alu_b;
 	
 	//----------------------------------------------------ALU
 	logic [31:0] R_EX;
-	logic zero;
 	alu ALU(.A(rd1), .B(alu_b), .op(aluop_EX), .R(R_EX), .zero(zero));
+	assign zero_out = zero;
 	
 	//----------------------------------------------------R_WB register
 	logic [31:0] R_WB;
@@ -139,6 +165,7 @@ module CPU (
 	
 	//---------------------------------------------------regsel_WB
 	mux_4 mux4(.a(GPIOin_WB), .b(IMM_WB), .c(R_WB), .d({20'b0, PC_EX}), .select(regsel_WB), .y(wd)); 
+	assign wr_data_out = wd;
 	
 	//assign regsel_WB_out = wd; // Probe for test bench
 
