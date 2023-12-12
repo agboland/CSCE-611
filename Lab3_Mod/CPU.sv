@@ -6,14 +6,24 @@ module CPU (
     output logic [31:0] GPIO_out,
 	 
 	 // Outputs for test bench
-    output logic [31:0] inst_mem_out,
-	 output logic [4:0] regdest_WB_out,
-	 output logic regwrite_WB_out,
-	 output logic [1:0] regselWB_reg_out,
-	 output logic [31:0] GPIOoutreg_out,
-	 output logic [31:0] GPIOin_reg_out,
-	 output logic [31:0] Rwb_reg_out,
-	 output logic [31:0] IMM_WB_reg_out
+   	output logic [31:0] inst_mem_out,
+	output logic [4:0] regdest_WB_out,
+	output logic regwrite_WB_out,
+	output logic [1:0] regselWB_reg_out,
+	output logic [31:0] GPIOoutreg_out,
+	output logic [31:0] GPIOin_reg_out,
+	output logic [31:0] Rwb_reg_out,
+	output logic [31:0] IMM_WB_reg_out,
+	output logic [6:0] opcode_out,
+	output logic [2:0] funct3_out,
+	output logic [6:0] funct7_out,
+	output logic [4:0] rd_out,
+	output logic [4:0] rs1_out,
+	output logic [4:0] rs2_out,
+	output logic [11:0] imm12_out,
+	output logic [6:0] imm7_out,
+	output logic [4:0] imm5_out,
+	output logic [19:0] imm20_out,
 );
 	
 	logic [11:0] PC_FETCH;
@@ -37,7 +47,17 @@ module CPU (
 	wire [4:0] imm5;
 	wire [19:0] imm20; 
 	InstructionDecoder instdec(.instruction(instruction_EX), .opcode(opcode), .funct3(funct3), .funct7(funct7), .rd(rd), .rs1(rs1), .rs2(rs2), .imm12(imm12), .imm7(imm7), .imm5(imm5), .imm20(imm20));
-	
+	//probe for simtop
+	assign opcode_out = opcode;
+	assign funct3_out = funct3;
+	assign funct7_out = funct7;
+	assign rd_out = rd;
+	assign rs1_out = rs1;
+	assign rs2_out = rs2;
+	assign imm12_out = imm12;
+	assign imm7_out = imm7;
+	assign imm5_out = imm5;
+	assign imm20_out = imm20;
 	
 	
 	
