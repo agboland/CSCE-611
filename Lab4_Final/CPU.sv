@@ -27,8 +27,9 @@ module CPU (
 	 output logic [31:0] rd1_out,
 	 output logic [31:0] rd2_out,
 	 output logic [31:0] alu_b_out,
-	 //output logic [4:0] wr_addr_out,
-	 output logic [31:0] wr_data_out
+	 output logic [31:0] wr_data_out,
+	 output logic stall_EX_out,
+	 output logic GPIO_we_out
 );
 	
 	logic [11:0] PC_FETCH; // Output of PC
@@ -109,13 +110,13 @@ module CPU (
 	logic [1:0] regsel_EX;
 	logic [3:0] aluop_EX;
 	logic gpio_we;
-
 	logic stall_EX;
 	logic stall_FETCH;
 	logic se_imm_sel;
 	logic zero;
 	controlUnit cu(.funct7(funct7), .imm12(imm12), .funct3(funct3), .opcode(opcode), .stall_EX(stall_EX), .zero(zero),
 		.stall_FETCH(stall_FETCH), .alusrc_EX(alusrc_EX), .regwrite_EX(regwrite_EX), .regsel_EX(regsel_EX), .aluop_EX(aluop_EX), .gpio_we(gpio_we), .pcsrc_EX(pcsrc_EX));
+	assign stall_EX_out = stall_EX;
 	
 	//----------------------------------------------------Stall register
 	register_1 stall_reg(.clk(clk), .in(stall_FETCH), .out(stall_EX));
@@ -137,6 +138,7 @@ module CPU (
 	//----------------------------------------------------GPIO_out register
 	register_32s GPIOoutreg(.clk(clk), .we(gpio_we), .in(rd1), .out(GPIO_out));
 	assign GPIOoutreg_out = GPIO_out;
+	assign GPIO_we_out = gpio_we;
 	
 	//----------------------------------------------------GPIO_in register
 	logic [31:0] GPIOin_WB;

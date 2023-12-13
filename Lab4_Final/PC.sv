@@ -13,9 +13,9 @@ module PC (
 
 	always_ff @(posedge clk) begin
 		if(~rst_n) begin
-			PC_FETCH <= 12'd0;
+			PC_FETCH = 12'd0;
 		end else begin //End IF begin Else
-			PC_FETCH <= addr;
+			PC_FETCH = addr;
 		end // End Else IF
 	end //End always_ff
 

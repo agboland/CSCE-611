@@ -30,6 +30,8 @@ module simtop;
 	 wire [4:0] rs1_out;
 	 wire [4:0] rs2_out;
 	 wire [31:0] wr_data_out;
+	 wire GPIO_we_out;
+	 wire stall_EX_out;
 
     wire [31:0] dummy;
     wire [31:0] dummy1;
@@ -67,7 +69,9 @@ module simtop;
 		  .alu_b_out(alu_b_out),
 		  .rs1_out(rs1_out),
 		  .rs2_out(rs2_out),
-		  .wr_data_out(wr_data_out)
+		  .wr_data_out(wr_data_out),
+		  .GPIO_we_out(GPIO_we_out),
+		  .stall_EX_out(stall_EX_out)
     );
 	 
 	assign dummy1 = 32'h4;
@@ -80,33 +84,15 @@ module simtop;
 			clk = ~clk; #15; // Cycle the clock once
 		end
 		rst = 1; #15; // Disable sync reset
-			
-			
-		// for inst_mem		
-//		for(int i = 0; i < 13; i++) begin
-//			repeat(2) begin
-//				clk = ~clk; #1; // Cycle Clock
-//			end
-//			$display("Output of InstMem: %h", inst_mem_out);
-//		end
-
-			
-		// Reset CPU again
-//		rst = 0; #1; // Enable sync reset
-//		repeat(2) begin 
-//			clk = ~clk; #1; // Cycle the clock once
-//		end
-//		rst = 1; #1; // Disable sync reset
-		
 		
 		
 		// Get first instruction
 		repeat(2) begin
-			clk = ~clk; #15; // Cycle the clock once
+			clk = ~clk; #150; // Cycle the clock once
 		end		
 			
 		
-		for(int i = 0; i < 30; i++) begin
+		for(int i = 0; i < 100; i++) begin
 		
 			$display("Output of instmem for instruction %2d: %h", i + 1, inst_mem_out);
 			$display("Output of branch_addr for instruction %2d: %h", i + 1, branch_addr);
@@ -121,10 +107,9 @@ module simtop;
 			$display("Output of alu_b for instruction %2d: %h", i + 1, alu_b_out);
 			$display("Output of rs1 for instruction %2d: %h", i + 1, rs1_out);
 			$display("Output of rs2 for instruction %2d: %h", i + 1, rs2_out);
-			//$display("Output of rs1 for instruction %2d: %h", i + 1, Rwb_reg_out);
 			
 			repeat(2) begin 
-				clk = ~clk; #15; // Cycle clock
+				clk = ~clk; #150; // Cycle clock
 			end
 		
 			
@@ -135,14 +120,9 @@ module simtop;
 			$display("Output of GPIO_in_reg for instruction %2d: %h", i + 1, GPIOin_reg_out);
 			$display("Output of Rwb_WB_reg for instruction %2d: %h", i + 1, Rwb_reg_out);
 			$display("Output of IMM_reg_WB for instruction %2d: %h", i + 1, IMM_WB_reg_out);
-			$display("Output of wr_data for instruction %2d: %h\n\n", i + 1, wr_data_out);
-			
-			
-//			repeat(2) begin 
-//				clk = ~clk; #1; // Cycle clock
-//			end
-//		
-//			$display("Output of regdest_WB for instruction %2d: %h\n\n", i + 1, regdest_WB_out);
+			$display("Output of wr_data for instruction %2d: %h", i + 1, wr_data_out);
+			$display("Output of GPIO_we for instruction %2d: %h\n\n", i + 1, GPIO_we_out);
+			$display("\n");
 		end
 		
 			

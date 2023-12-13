@@ -23,8 +23,6 @@ always_ff @(posedge clk) begin
 	if (we) mem[writeaddr] <= writedata;
 end
 
-// Bakos made dumb code not work
-
 //always_comb begin
 //	$monitor("reg 6: %8h", mem[6]);
 //	$monitor("reg 5: %8h", mem[5]);

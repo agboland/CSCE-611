@@ -93,42 +93,42 @@ always_comb begin
 	 
 	 
 	 //B-type instructions
-	 end else if (opcode == 7'h63 && funct3 == 3'h0) begin			//beq
+	 end else if (opcode == 7'h63 && funct3 == 3'h0 && !stall_EX) begin			//beq
 		aluop_EX = 4'h4;
 		regwrite_EX = 1'h0;
 		if (zero) begin 
 			pcsrc_EX = 2'h1;
 			stall_FETCH = 1'h1;
 		end 
-	 end else if (opcode == 7'h63 && funct3 == 3'h1) begin			//bne
+	 end else if (opcode == 7'h63 && funct3 == 3'h1 && !stall_EX) begin			//bne
 		aluop_EX = 4'h4;
 		regwrite_EX = 1'h0;
 		if (!zero) begin
 			pcsrc_EX = 2'h1;
 			stall_FETCH = 1'h1;
 		end
-	 end else if (opcode == 7'h63 && funct3 == 3'h4) begin			//blt
+	 end else if (opcode == 7'h63 && funct3 == 3'h4 && !stall_EX) begin			//blt
 		aluop_EX = 4'hC;
 		regwrite_EX = 1'h0;
 		if (!zero) begin
 			pcsrc_EX = 2'h1;
 			stall_FETCH = 1'h1;
 		end
-	 end else if (opcode == 7'h63 && funct3 == 3'h6) begin			//bltu
+	 end else if (opcode == 7'h63 && funct3 == 3'h6 && !stall_EX) begin			//bltu
 		aluop_EX = 4'hD;
 		regwrite_EX = 1'h0;
 		if (!zero) begin
 			pcsrc_EX = 2'h1;
 			stall_FETCH = 1'h1;
 		end
-	 end else if (opcode == 7'h63 && funct3 == 3'h5) begin			//bge
+	 end else if (opcode == 7'h63 && funct3 == 3'h5 && !stall_EX) begin			//bge
 		aluop_EX = 4'hC;
 		regwrite_EX = 1'h0;
 		if (zero) begin 
 			pcsrc_EX = 2'h1;
 			stall_FETCH = 1'h1;
 		end
-	 end else if (opcode == 7'h63 && funct3 == 3'h7) begin			//bgeu
+	 end else if (opcode == 7'h63 && funct3 == 3'h7 && !stall_EX) begin			//bgeu
 		aluop_EX = 4'hD;
 		regwrite_EX = 1'h0;
 		if (zero) begin
