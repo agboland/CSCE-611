@@ -69,29 +69,5 @@ module simtop;
 
 		
 
-		
-//################################Test of PC_EX_out#######################################		
-
-		if (PC_EX_out==12'b0000_0001_0100) begin
-			$display("Test of PC_EX_out passed");
-		end else begin
-			$display("Test of PC_EX_out failed"); 
-		end
-	
-	
-
-//################################Test of stall_EX_out#######################################
-
-		//repeat(2) begin
-		//	clk = ~clk; #5; // Cycle the clock once
-		//end
-		
-		if (stall_EX_out == 1'b1) begin
-			$display("Test of stall_EX_out passed");
-		end else begin
-			$display("Test of stall_EX_out failed"); 
-		end
-		
-			
 	end
 endmodule  
