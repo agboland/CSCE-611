@@ -29,7 +29,14 @@ module CPU (
 	 output logic [31:0] alu_b_out,
 	 output logic [31:0] wr_data_out,
 	 output logic stall_EX_out,
-	 output logic GPIO_we_out
+	 output logic GPIO_we_out,
+	output logic alusrc_EX_out,
+	 output logic regwrite_EX_out,
+	output logic [1:0] regsel_EX_out,
+	output logic [3:0] aluop_EX_out,
+	 output logic gpio_we_out,
+	output logic [1:0] pcsrc_EX_out,
+	 output logic stall_FETCH_out
 );
 	
 	logic [11:0] PC_FETCH; // Output of PC
@@ -116,7 +123,14 @@ module CPU (
 	logic zero;
 	controlUnit cu(.funct7(funct7), .imm12(imm12), .funct3(funct3), .opcode(opcode), .stall_EX(stall_EX), .zero(zero),
 		.stall_FETCH(stall_FETCH), .alusrc_EX(alusrc_EX), .regwrite_EX(regwrite_EX), .regsel_EX(regsel_EX), .aluop_EX(aluop_EX), .gpio_we(gpio_we), .pcsrc_EX(pcsrc_EX));
-	assign stall_EX_out = stall_EX;
+	//Probes for testbench
+	assign alusrc_EX_out = alusrc_EX;
+	assign regwrite_EX_out = regwrite_EX;
+	assign regsel_EX_out = regsel_EX;
+	assign gpio_we_out = gpio_we;
+	assign aluop_EX_out = aluop_EX;
+	assign pcsrc_EX_out = pcsrc_EX;
+	assign stall_FETCH_out = stall_FETCH;
 	
 	//----------------------------------------------------Stall register
 	register_1 stall_reg(.clk(clk), .in(stall_FETCH), .out(stall_EX));
